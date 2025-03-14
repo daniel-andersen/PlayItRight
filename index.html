@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+    <title>Play It Right!</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
+    <script src="https://raw.githubusercontent.com/daniel-andersen/wad/refs/heads/master/build/wad.min.js"></script>
+    <script src="js/random-measures.js"></script>
+    <script src="js/sheet.js"></script>
+
+    <h1>Play It Right!</h1>
+    <button onclick="generate()" type="button">Generate</button>
+    <button onclick="record()" type="button">Record</button>
+    <button onclick="analyze()" type="button">Stop</button>
+    <button onclick="test()" type="button">Test</button>
+    &nbsp;&nbsp;&nbsp;Realtime analysis: <input type="checkbox" id="realtimeAnalysis">
+
+    <div id="output"></div>
+
+    <script>
+        function generate() {
+            generateSheet(measurePools.randomEasy)
+            generateVisuals()
+        }
+
+        function record() {
+            startRecording()
+        }
+
+        function analyze() {
+            stopRecording()
+            analyzeRecording()
+        }
+
+        function test() {
+            runTest(measurePools.warmupExercise)
+        }
+    </script>
+</body>
+</html>
