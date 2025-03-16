@@ -43,7 +43,7 @@ function fetchSounds(instrument) {
     const sounds = noteSoundFiles[instrument]
 
     for (const [note, filename] of Object.entries(sounds)) {
-        noteSounds[note] = new Wad({source: filename, volume: 2.0 })
+        noteSounds[note] = new Wad({source: "https://daniel-andersen.github.io/PlayItRight/" + filename, volume: 2.0 })
     }
 }
 
