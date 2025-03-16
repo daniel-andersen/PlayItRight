@@ -104,7 +104,10 @@ function generateVisuals() {
                 let color = 'black'
                 let totalNoteIndex = currentSheet.notes.length - 1
 
-                if (currentSheet.analysis !== undefined && totalNoteIndex < currentSheet.analysis.matchedNotesTuples.length) {
+                if (currentSheet.playback.noteIndex === totalNoteIndex) {
+                    color = 'blue'
+                }
+                else if (currentSheet.analysis !== undefined && totalNoteIndex < currentSheet.analysis.matchedNotesTuples.length) {
                     const [nodeName, played, pitchDelta, inTune, tooLow] = getNoteAnalysisResult(currentSheet.analysis.matchedNotesTuples[totalNoteIndex])
                     color = !played ? 'black' : (inTune ? 'green' : 'red')
                 }
@@ -544,6 +547,8 @@ function stopPlayOrRecord() {
         currentSheet.wad.tuner.remove(currentSheet.currentMicrophone)
         currentSheet.currentMicrophone = undefined
     }
+
+    currentSheet.playback.noteIndex = undefined
 
     setPlayState("Stopped")
 }

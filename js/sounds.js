@@ -56,6 +56,7 @@ function playCurrentSheet() {
     function playNextNote() {
         if (currentSheet.playback.noteIndex >= currentSheet.notes.length) {
             stopPlayOrRecord()
+            generateVisuals()
             return
         }
 
@@ -68,6 +69,8 @@ function playCurrentSheet() {
 
         currentSheet.playback.wad = noteSounds[note.noteName]
         currentSheet.playback.wad.play()
+
+        generateVisuals()
 
         currentSheet.playback.noteIndex += 1
 

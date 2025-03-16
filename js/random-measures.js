@@ -28,12 +28,12 @@ const measurePools = [
             [ { notes: ["C2/4"] }, { notes: ["E2/4"] }, { notes: ["G2/4"] }, { notes: ["B2/4"] } ],
             [ { notes: ["F2/4"] }, { notes: ["E2/4"] }, { notes: ["D2/4"] }, { notes: ["C2/4"] } ],
             [ { notes: ["C2/4"] }, { notes: ["E2/4"] }, { notes: ["D2/4"] }, { notes: ["F2/4"] } ],
-            [ { notes: ["D3/4"] }, { notes: ["D3/4"] }, { notes: ["G2/4"] }, { notes: ["G2/4"] } ],
+            [ { notes: ["D3/4"] }, { notes: ["E3/4"] }, { notes: ["G2/4"] }, { notes: ["F2/4"] } ],
             [ { notes: ["A3/4"] }, { notes: ["F3/4"] }, { notes: ["G3/4"] }, { notes: ["E3/4"] } ],
             [ { notes: ["D4/4"] }, { notes: ["C4/4"] }, { notes: ["D4/4"] }, { notes: ["B3/4"] } ],
             [ { notes: ["D3/4"] }, { notes: ["C3/4"] }, { notes: ["E3/4"] }, { notes: ["F3/4"] } ],
             [ { notes: ["E3/4"] }, { notes: ["F3/4"] }, { notes: ["G3/4"] }, { notes: ["A3/4"] } ],
-            [ { notes: ["E2/4"] }, { notes: ["E2/4"] }, { notes: ["F2/4"] }, { notes: ["G2/4"] } ],
+            [ { notes: ["E2/4"] }, { notes: ["D2/4"] }, { notes: ["F2/4"] }, { notes: ["G2/4"] } ],
         ],
     },
     {
@@ -121,8 +121,9 @@ function generateRandomSheet(measurePool, measureCount) {
             randomIndex = getRandomInt(0, remainingPool.length)
             measure = remainingPool[randomIndex].slice()
 
+            newFirstNote = measure[measure.length - 1].notes[0]
             newLastNote = measure[measure.length - 1].notes[measure[measure.length - 1].notes.length - 1]
-        } while (newLastNote === lastNote)
+        } while (newFirstNote === lastNote)
 
         lastNote = newLastNote
         
