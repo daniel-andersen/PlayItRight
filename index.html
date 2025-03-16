@@ -7,35 +7,107 @@
 <body>
     <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
     <script src="js/wad.min.js"></script>
+    <script src="js/sounds.js"></script>
     <script src="js/random-measures.js"></script>
     <script src="js/sheet.js"></script>
 
-    <h1>Play It Right!</h1>
-    <button onclick="generate()" type="button">Generate</button>
-    <button onclick="record()" type="button">Record</button>
-    <button onclick="analyze()" type="button">Stop</button>
-    <button onclick="test()" type="button">Test</button>
-    &nbsp;&nbsp;&nbsp;Realtime analysis: <input type="checkbox" id="realtimeAnalysis">
+    <h2>Play It Right!</h2>
 
+    <p id="initializing">Hold on while initializing...</p>
+
+    <div id="controls" style="display: none">
+        Measures: <input type="number" id="measureCount" value="5" style="width: 50px" id="measureCount" />
+        &nbsp;&nbsp;&nbsp;Realtime analysis: <input type="checkbox" id="realtimeAnalysis" />
+
+        <br />
+        <br />
+
+        <select name="Sheet" id="sheets"></select>
+        <button onclick="generate()" type="button" id="generateSheetButton">Generate</button>
+        <button onclick="record()" type="button" id="recordButton">Record</button>
+        <button onclick="stop()" type="button" id="stopButton">Stop</button>
+        <button onclick="playSheet()" type="button" id="playSheetButton">Play Sheet</button>
+        <button onclick="playRecording()" type="button" id="playRecordingButton">Play Recording</button>
+    </div>
     <div id="output"></div>
 
     <script>
+        initialize()
+
+        function initialize() {
+            fetchSounds("cello")
+
+            resetCurrentSheet()
+            populateSheetDropdown()
+            updateVisualState()
+
+            document.getElementById("initializing").style.display = "none"
+            document.getElementById("controls").style.display = "inline-block"
+        }
+
         function generate() {
-            generateSheet(measurePools.randomEasy)
-            generateVisuals()
+            var dropdown = document.getElementById("sheets")
+
+            let selectedSheetIndex = dropdown.value
+            let selectedSheet = dropdownToMeasure[selectedSheetIndex]
+            if (selectedSheet.type === undefined) {
+                return
+            }
+
+            generateSheet(selectedSheet)
         }
 
         function record() {
             startRecording()
         }
 
-        function analyze() {
-            stopRecording()
-            analyzeRecording()
+        function stop() {
+            let playState = currentSheet.playState
+
+            stopPlayOrRecord()
+
+            if (playState === "Recording") {
+                analyzeRecording()
+            }
+            else if (playState === "PlayingSheet") {
+            }
         }
 
-        function test() {
-            runTest(measurePools.warmupExercise)
+        function playSheet() {
+            playCurrentSheet()
+        }
+
+        function playRecording() {
+            runTest(measurePools[1])
+        }
+
+        function setPlayState(state) {
+            currentSheet.playState = state
+
+            updateVisualState()
+        }
+
+        function toggleElement(element, on) {
+            element.style.display = on ? "inline-block" : "none"
+        }
+
+        function updateVisualState() {
+            let generateSheetButton = document.getElementById("generateSheetButton")
+            let recordButton = document.getElementById("recordButton")
+            let stopButton = document.getElementById("stopButton")
+            let playSheetButton = document.getElementById("playSheetButton")
+            let playRecordingButton = document.getElementById("playRecordingButton")
+            let measureCount = document.getElementById("measureCount")
+
+            const hasMeasures = currentSheet.measures !== undefined && currentSheet.measures.length > 0
+            const hasRecording = currentSheet.analysis.playedNotes.length > 0
+
+            toggleElement(generateSheetButton, currentSheet.playState === "Stopped")
+            toggleElement(recordButton, currentSheet.playState === "Stopped" && hasMeasures)
+            toggleElement(stopButton, currentSheet.playState !== "Stopped" && hasMeasures)
+            toggleElement(playSheetButton, currentSheet.playState === "Stopped" && hasMeasures)
+            toggleElement(playRecordingButton, currentSheet.playState === "Stopped" && hasMeasures && hasRecording)
+            toggleElement(measureCount, currentSheet.playState === "Stopped")
         }
     </script>
 </body>
