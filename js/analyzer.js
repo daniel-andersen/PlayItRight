@@ -75,9 +75,9 @@ function filterValidNotes() {
     let validNotes = []
 
     for (let playedNote of currentSheet.recording.notes) {
-        if (playedNote.endTime - playedNote.startTime < minDuration) {
+        /*if (playedNote.endTime - playedNote.startTime < minDuration) {
             continue
-        }
+        }*/
 
         /*if (playedNote.maxVolume < minVolume) {
             continue
