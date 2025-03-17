@@ -72,6 +72,8 @@ function playCurrentSheet() {
 
         generateVisuals()
 
+        showBoxedText(getDisplayNoteName(note.noteName), "green")
+    
         currentSheet.playback.noteIndex += 1
 
         currentSheet.playback.playbackInterval = setTimeout(() => {

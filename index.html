@@ -1,35 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png">
+
     <title>Play It Right!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
     <script src="js/wad.min.js"></script>
+    <script src="js/util.js"></script>
     <script src="js/sounds.js"></script>
     <script src="js/random-measures.js"></script>
     <script src="js/sheet.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/visualization.js"></script>
+    <script src="js/analyzer.js"></script>
 
     <h2>Play It Right!</h2>
 
     <p id="initializing">Hold on while initializing...</p>
 
-    <div id="controls" style="display: none">
-        Measures: <input type="number" id="measureCount" value="5" style="width: 50px" id="measureCount" />
-        &nbsp;&nbsp;&nbsp;Realtime analysis: <input type="checkbox" id="realtimeAnalysis" />
-
-        <br />
-        <br />
-
-        <select name="Sheet" id="sheets"></select>
-        <button onclick="generate()" type="button" id="generateSheetButton">Generate</button>
-        <button onclick="record()" type="button" id="recordButton">Record</button>
-        <button onclick="stop()" type="button" id="stopButton">Stop</button>
-        <button onclick="playSheet()" type="button" id="playSheetButton">Play Sheet</button>
-        <button onclick="playRecording()" type="button" id="playRecordingButton">Play Recording</button>
+    <div style="display: flex; align-items: center;">
+        <div style="margin-left: 20px; margin-right: 10px;">
+            <strong>
+                <div id="boxedText" style="font-size: 1.8em; background-color: white; width: 50px; height: 50px; border: 1px solid black; display: flex; justify-content: center; align-items: center; vertical-align: middle;">
+                </div>
+            </strong>
+        </div>
+        <div id="controls" style="display: none; padding: 10px;">
+            <div>
+                Measures: <input type="number" value="5" style="width: 50px" id="measureCount" />
+                Countdown: <input type="number" value="3" style="width: 50px" id="countdown" />
+                &nbsp;&nbsp;&nbsp;Realtime analysis: <input type="checkbox" id="realtimeAnalysis" />
+            </div>
+            <div style="height: 5px;"></div>
+            <div>
+                <select name="Sheet" id="sheets"></select>
+                <button onclick="generate()" type="button" id="generateSheetButton">Generate</button>
+                <button onclick="record()" type="button" id="recordButton">Record</button>
+                <button onclick="stop()" type="button" id="stopButton">Stop</button>
+                <button onclick="playSheet()" type="button" id="playSheetButton">Play Sheet</button>
+            </div>
+        </div>
     </div>
+
     <div id="output"></div>
 
     <script>
@@ -58,7 +73,13 @@
             generateSheet(selectedSheet)
         }
 
-        function record() {
+        async function record() {
+            resetAnalysis()
+            generateVisuals()
+
+            await initializeMicrophone()
+
+            await performCountdown()
             startRecording()
         }
 
@@ -74,12 +95,10 @@
             }
         }
 
-        function playSheet() {
+        async function playSheet() {
+            generateVisuals()
+            await performCountdown()
             playCurrentSheet()
-        }
-
-        function playRecording() {
-            runTest(measurePools[1])
         }
 
         function setPlayState(state) {
@@ -88,17 +107,11 @@
             updateVisualState()
         }
 
-        function toggleElement(element, on) {
-            element.style.display = on ? "inline-block" : "none"
-        }
-
         function updateVisualState() {
-            let generateSheetButton = document.getElementById("generateSheetButton")
-            let recordButton = document.getElementById("recordButton")
-            let stopButton = document.getElementById("stopButton")
-            let playSheetButton = document.getElementById("playSheetButton")
-            let playRecordingButton = document.getElementById("playRecordingButton")
-            let measureCount = document.getElementById("measureCount")
+            const generateSheetButton = document.getElementById("generateSheetButton")
+            const recordButton = document.getElementById("recordButton")
+            const stopButton = document.getElementById("stopButton")
+            const playSheetButton = document.getElementById("playSheetButton")
 
             const hasMeasures = currentSheet.measures !== undefined && currentSheet.measures.length > 0
             const hasRecording = currentSheet.analysis.playedNotes.length > 0
@@ -107,8 +120,6 @@
             toggleElement(recordButton, currentSheet.playState === "Stopped" && hasMeasures)
             toggleElement(stopButton, currentSheet.playState !== "Stopped" && hasMeasures)
             toggleElement(playSheetButton, currentSheet.playState === "Stopped" && hasMeasures)
-            toggleElement(playRecordingButton, currentSheet.playState === "Stopped" && hasMeasures && hasRecording)
-            toggleElement(measureCount, currentSheet.playState === "Stopped")
         }
     </script>
 </body>

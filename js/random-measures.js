@@ -4,14 +4,14 @@ const measurePools = [
         type: "random",
         creationStrategy: "random",
         measures: [
-            [ { notes: ["D3/1"] } ],
-            [ { notes: ["A2/1"] } ],
-            [ { notes: ["G2/1"] } ],
+            [ { notes: ["G2/2"] }, { notes: ["D3/2"] } ],
             [ { notes: ["G2/2"] }, { notes: ["C3/2"] } ],
             [ { notes: ["B2/2"] }, { notes: ["F2/2"] } ],
             [ { notes: ["A3/2"] }, { notes: ["D4/2"] } ],
             [ { notes: ["D3/2"] }, { notes: ["A3/2"] } ],
             [ { notes: ["G2/2"] }, { notes: ["C3/2"] } ],
+            [ { notes: ["E3/2"] }, { notes: ["C3/4"] }, { notes: ["F3/4"] } ],
+            [ { notes: ["A2/2"] }, { notes: ["C3/4"] }, { notes: ["B2/4"] } ],
             [ { notes: ["D3/4"] }, { notes: ["F3/4"] }, { notes: ["E3/2"] } ],
             [ { notes: ["B3/2"] }, { notes: ["G3/4"] }, { notes: ["A3/4"] } ],
             [ { notes: ["C3/4"] }, { notes: ["B2/4"] }, { notes: ["C3/2"] } ],
@@ -34,6 +34,11 @@ const measurePools = [
             [ { notes: ["D3/4"] }, { notes: ["C3/4"] }, { notes: ["E3/4"] }, { notes: ["F3/4"] } ],
             [ { notes: ["E3/4"] }, { notes: ["F3/4"] }, { notes: ["G3/4"] }, { notes: ["A3/4"] } ],
             [ { notes: ["E2/4"] }, { notes: ["D2/4"] }, { notes: ["F2/4"] }, { notes: ["G2/4"] } ],
+            [ { notes: ["A2/4"] }, { notes: ["G2/4"] }, { notes: ["B2/4"] }, { notes: ["C3/4"] } ],
+            [ { notes: ["B2/4"] }, { notes: ["C3/4"] }, { notes: ["G2/4"] }, { notes: ["A2/4"] } ],
+            [ { notes: ["B2/4"] }, { notes: ["C3/4"] }, { notes: ["E3/4"] }, { notes: ["F3/4"] } ],
+            [ { notes: ["C2/4"] }, { notes: ["G2/4"] }, { notes: ["D3/4"] }, { notes: ["A3/4"] } ],
+            [ { notes: ["A3/4"] }, { notes: ["D3/4"] }, { notes: ["G2/4"] }, { notes: ["C2/4"] } ],
         ],
     },
     {
@@ -121,8 +126,11 @@ function generateRandomSheet(measurePool, measureCount) {
             randomIndex = getRandomInt(0, remainingPool.length)
             measure = remainingPool[randomIndex].slice()
 
-            newFirstNote = measure[measure.length - 1].notes[0]
-            newLastNote = measure[measure.length - 1].notes[measure[measure.length - 1].notes.length - 1]
+            const measureFirstNoteSet = measure[0]
+            const measureLastNoteSet = measure[measure.length - 1]
+
+            newFirstNote = getNoteNameWithoutDuration(measureFirstNoteSet.notes[0])
+            newLastNote = getNoteNameWithoutDuration(measureLastNoteSet.notes[measureLastNoteSet.notes.length - 1])
         } while (newFirstNote === lastNote)
 
         lastNote = newLastNote
