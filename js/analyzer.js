@@ -1,8 +1,9 @@
 var inTuneTolerance = 2.0
 
 const perfectTolerance = 1.0
-const validRecognizedPercentage = 0.7
+const validRecognizedPercentage = 0.5
 const acceptedCorrectnessPercentage = 0.8
+const tendencyNoiseThreshold = 0.7
 
 function resetAnalysis() {
     currentSheet.recording.notes = []
@@ -50,10 +51,10 @@ function analyzeGeneralTendency() {
         tooHighCount += tooLow ? 0 : 1
     }
 
-    currentSheet.analysis.recognizedPercentage = totalPlayedCount / totalCount
-    currentSheet.analysis.correctnessPercentage = perfectCount / totalPlayedCount
-    currentSheet.analysis.tooLowPercentage = tooLowCount / totalPlayedCount
-    currentSheet.analysis.tooHighPercentage = tooHighCount / totalPlayedCount
+    currentSheet.analysis.recognizedPercentage = totalPlayedCount > 0 ? totalPlayedCount / totalCount : 0.0
+    currentSheet.analysis.correctnessPercentage = totalPlayedCount > 0 ? perfectCount / totalPlayedCount : 0.0
+    currentSheet.analysis.tooLowPercentage = totalPlayedCount > 0 ? tooLowCount / totalPlayedCount : 0.0
+    currentSheet.analysis.tooHighPercentage = totalPlayedCount > 0 ? tooHighCount / totalPlayedCount : 0.0
 
     console.log(perfectCount, tooLowCount, tooHighCount, totalPlayedCount)
 }
@@ -75,9 +76,9 @@ function filterValidNotes() {
     let validNotes = []
 
     for (let playedNote of currentSheet.recording.notes) {
-        /*if (playedNote.endTime - playedNote.startTime < minDuration) {
+        if (playedNote.endTime - playedNote.startTime < minDuration) {
             continue
-        }*/
+        }
 
         /*if (playedNote.maxVolume < minVolume) {
             continue

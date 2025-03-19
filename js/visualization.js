@@ -154,6 +154,7 @@ function generateVisuals() {
     }
 
     showBoxedText("", "black")
+    showNoteName(undefined)
 
     updateVisualState()
 }
@@ -202,6 +203,9 @@ function drawAnalysis() {
             if (currentSheet.analysis.correctnessPercentage >= acceptedCorrectnessPercentage) {
                 showBoxedText("✓", "green")
             }
+            else if (Math.min(currentSheet.analysis.tooLowPercentage, currentSheet.analysis.tooHighPercentage) / Math.max(currentSheet.analysis.tooLowPercentage, currentSheet.analysis.tooHighPercentage) >= tendencyNoiseThreshold) {
+                showBoxedText("↓↑", "red")
+            }
             else if (currentSheet.analysis.tooLowPercentage > currentSheet.analysis.tooHighPercentage) {
                 showBoxedText("↓", "red")
             }
@@ -213,4 +217,45 @@ function drawAnalysis() {
             showBoxedText("?", "black")
         }
     }
+}
+
+function showNoteName(note) {
+    const noteElement = document.getElementById("noteText")
+
+    if (note === undefined) {
+        showElement(noteElement, false)
+        return
+    }
+
+    const noteGraphics = note.noteGraphics
+
+    const svgRect = getSvgBoundingBox()
+    const noteBoundingBox = noteGraphics.getBoundingBox()
+
+    noteElement.style.left = (svgRect.left + noteBoundingBox.x - 20) + "px"
+    noteElement.style.top = (svgRect.top + noteBoundingBox.y + noteBoundingBox.h) + "px"
+    noteElement.innerHTML = note !== undefined ? getDisplayNoteName(note.noteName) : ""
+
+    showElement(noteElement, true)
+}
+
+function visualizeNoteAtPosition(x, y) {
+    const clickPadding = 5
+
+    for (let note of currentSheet.notes) {
+        const noteGraphics = note.noteGraphics
+
+        const noteBoundingBox = noteGraphics.getBoundingBox()
+
+        if (x < noteBoundingBox.x - clickPadding || x > noteBoundingBox.x + noteBoundingBox.w + clickPadding ||
+            y < noteBoundingBox.y - clickPadding || y > noteBoundingBox.y + noteBoundingBox.h + clickPadding) {
+            continue
+        }
+
+        showNoteName(note)
+
+        return
+    }
+
+    showNoteName(undefined)
 }

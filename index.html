@@ -30,9 +30,9 @@
         </div>
         <div id="controls" style="display: none; padding: 10px;">
             <div>
-                Measures: <input type="number" value="5" style="width: 50px" id="measureCount" />
-                Countdown: <input type="number" value="3" style="width: 50px" id="countdown" />
-                &nbsp;&nbsp;&nbsp;Realtime analysis: <input type="checkbox" id="realtimeAnalysis" />
+                Measures: <input type="number" value="5" style="width: 30px" id="measureCount" /> &nbsp;
+                Countdown: <input type="number" value="3" style="width: 30px" id="countdown" />
+                <div style="display: none;">&nbsp;&nbsp;Realtime analysis: <input type="checkbox" id="realtimeAnalysis" /></div>
             </div>
             <div style="height: 5px;"></div>
             <div>
@@ -47,6 +47,11 @@
 
     <div id="output"></div>
 
+    <strong>
+        <div id="noteText" style="font-size: 1.5em; color: green; background-color: transparent; position: absolute; width: 25px; height: 25px; visibility: visible; justify-content: center; align-items: center; vertical-align: middle;">
+        </div>
+    </strong>
+
     <script>
         initialize()
 
@@ -59,6 +64,17 @@
 
             document.getElementById("initializing").style.display = "none"
             document.getElementById("controls").style.display = "inline-block"
+
+            document.addEventListener("click", function(event) {
+                const svgRect = getSvgBoundingBox()
+
+                if (event.pageX < svgRect.left || event.pageX > svgRect.right ||
+                    event.pageY < svgRect.top || event.pageY > svgRect.bottom) {
+                    return
+                }
+
+                visualizeNoteAtPosition(event.pageX - svgRect.left, event.pageY - svgRect.top)
+            })
         }
 
         function generate() {

@@ -10,7 +10,7 @@ async function initializeMicrophone(options = {}) {
 
     if (useMic) {
         if (currentSheet.wad.microphone === undefined) {
-            currentSheet.wad.microphone = new Wad({source: "mic", volume: 5.0 })
+            currentSheet.wad.microphone = new Wad({source: "mic", volume: 3.0 })
         }
 
         currentSheet.currentMicrophone = currentSheet.wad.microphone

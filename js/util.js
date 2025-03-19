@@ -76,6 +76,17 @@ function stopCountdown(success) {
     currentSheet.countdown.promise.reject = undefined
 }
 
+function getSvgBoundingBox() {
+    const svgContext = document.getElementById("output").firstElementChild
+    if (svgContext === undefined) {
+        return {left: 0, top: 0, right: 0, bottom: 0}
+    }
+
+    const rect = svgContext.getBoundingClientRect()
+    
+    return {left: rect.left + window.scrollX, top: rect.top + window.scrollY, right: rect.right + window.scrollX, bottom: rect.bottom + window.scrollY}
+}
+
 function getDisplayNoteName(noteName) {
     const match = noteName.match(/\d/)
     

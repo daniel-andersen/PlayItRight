@@ -1,6 +1,6 @@
 const measurePools = [
     {
-        name: "Easy",
+        name: "First position",
         type: "random",
         creationStrategy: "random",
         measures: [
@@ -39,6 +39,72 @@ const measurePools = [
             [ { notes: ["B2/4"] }, { notes: ["C3/4"] }, { notes: ["E3/4"] }, { notes: ["F3/4"] } ],
             [ { notes: ["C2/4"] }, { notes: ["G2/4"] }, { notes: ["D3/4"] }, { notes: ["A3/4"] } ],
             [ { notes: ["A3/4"] }, { notes: ["D3/4"] }, { notes: ["G2/4"] }, { notes: ["C2/4"] } ],
+        ],
+    },
+    {
+        name: "First finger intonation",
+        type: "random",
+        creationStrategy: "random",
+        measures: [
+            // A string
+            [ { notes: ["A3/2"] }, { notes: ["B3/2"] } ],
+            [ { notes: ["B3/2"] }, { notes: ["A3/2"] } ],
+            [ { notes: ["B3/2"] }, { notes: ["C4/2"] } ],
+            [ { notes: ["C4/2"] }, { notes: ["B3/2"] } ],
+            [ { notes: ["B3/2"] }, { notes: ["D4/2"] } ],
+            [ { notes: ["D4/2"] }, { notes: ["B3/2"] } ],
+
+            [ { notes: ["B3/4"] }, { notes: ["A3/4"] }, { notes: ["B3/4"] }, { notes: ["A3/4"] } ],
+            [ { notes: ["B3/4"] }, { notes: ["A3/4"] }, { notes: ["B3/4"] }, { notes: ["A3/4"] } ],
+            [ { notes: ["B3/4"] }, { notes: ["C4/4"] }, { notes: ["B3/4"] }, { notes: ["C4/4"] } ],
+            [ { notes: ["C4/4"] }, { notes: ["B3/4"] }, { notes: ["C4/4"] }, { notes: ["B3/4"] } ],
+            [ { notes: ["B3/4"] }, { notes: ["D4/4"] }, { notes: ["B3/4"] }, { notes: ["D4/4"] } ],
+            [ { notes: ["D4/4"] }, { notes: ["B3/4"] }, { notes: ["D4/4"] }, { notes: ["B3/4"] } ],
+
+            // D string
+            [ { notes: ["D3/2"] }, { notes: ["E3/2"] } ],
+            [ { notes: ["E3/2"] }, { notes: ["D3/2"] } ],
+            [ { notes: ["E3/2"] }, { notes: ["F3/2"] } ],
+            [ { notes: ["F3/2"] }, { notes: ["E3/2"] } ],
+            [ { notes: ["E3/2"] }, { notes: ["G3/2"] } ],
+            [ { notes: ["G3/2"] }, { notes: ["E3/2"] } ],
+
+            [ { notes: ["D3/4"] }, { notes: ["E3/4"] }, { notes: ["D3/4"] }, { notes: ["E3/4"] } ],
+            [ { notes: ["E3/4"] }, { notes: ["D3/4"] }, { notes: ["E3/4"] }, { notes: ["D3/4"] } ],
+            [ { notes: ["E3/4"] }, { notes: ["F3/4"] }, { notes: ["E3/4"] }, { notes: ["F3/4"] } ],
+            [ { notes: ["F3/4"] }, { notes: ["E3/4"] }, { notes: ["F3/4"] }, { notes: ["E3/4"] } ],
+            [ { notes: ["E3/4"] }, { notes: ["G3/4"] }, { notes: ["E3/4"] }, { notes: ["G3/4"] } ],
+            [ { notes: ["G3/4"] }, { notes: ["E3/4"] }, { notes: ["G3/4"] }, { notes: ["E3/4"] } ],
+
+            // G string
+            [ { notes: ["G2/2"] }, { notes: ["A2/2"] } ],
+            [ { notes: ["A2/2"] }, { notes: ["G2/2"] } ],
+            [ { notes: ["A2/2"] }, { notes: ["B2/2"] } ],
+            [ { notes: ["B2/2"] }, { notes: ["A2/2"] } ],
+            [ { notes: ["A2/2"] }, { notes: ["C3/2"] } ],
+            [ { notes: ["C3/2"] }, { notes: ["A2/2"] } ],
+
+            [ { notes: ["G2/4"] }, { notes: ["A2/4"] }, { notes: ["G2/4"] }, { notes: ["A2/4"] } ],
+            [ { notes: ["A2/4"] }, { notes: ["G2/4"] }, { notes: ["A2/4"] }, { notes: ["G2/4"] } ],
+            [ { notes: ["A2/4"] }, { notes: ["B2/4"] }, { notes: ["A2/4"] }, { notes: ["B2/4"] } ],
+            [ { notes: ["B2/4"] }, { notes: ["A2/4"] }, { notes: ["B2/4"] }, { notes: ["A2/4"] } ],
+            [ { notes: ["A2/4"] }, { notes: ["C3/4"] }, { notes: ["A2/4"] }, { notes: ["C3/4"] } ],
+            [ { notes: ["C3/4"] }, { notes: ["A2/4"] }, { notes: ["C3/4"] }, { notes: ["A2/4"] } ],
+
+            // C string
+            [ { notes: ["C2/2"] }, { notes: ["D2/2"] } ],
+            [ { notes: ["D2/2"] }, { notes: ["C2/2"] } ],
+            [ { notes: ["D2/2"] }, { notes: ["E2/2"] } ],
+            [ { notes: ["E2/2"] }, { notes: ["D2/2"] } ],
+            [ { notes: ["D2/2"] }, { notes: ["F2/2"] } ],
+            [ { notes: ["F2/2"] }, { notes: ["D2/2"] } ],
+
+            [ { notes: ["C2/4"] }, { notes: ["D2/4"] }, { notes: ["C2/4"] }, { notes: ["D2/4"] } ],
+            [ { notes: ["D2/4"] }, { notes: ["C2/4"] }, { notes: ["D2/4"] }, { notes: ["C2/4"] } ],
+            [ { notes: ["D2/4"] }, { notes: ["E2/4"] }, { notes: ["D2/4"] }, { notes: ["E2/4"] } ],
+            [ { notes: ["E2/4"] }, { notes: ["D2/4"] }, { notes: ["E2/4"] }, { notes: ["D2/4"] } ],
+            [ { notes: ["D2/4"] }, { notes: ["F2/4"] }, { notes: ["D2/4"] }, { notes: ["F2/4"] } ],
+            [ { notes: ["F2/4"] }, { notes: ["D2/4"] }, { notes: ["F2/4"] }, { notes: ["D2/4"] } ],
         ],
     },
     {
@@ -122,7 +188,11 @@ function generateRandomSheet(measurePool, measureCount) {
             break
         }
 
+        let attemptsRemaining = 10
+
         do {
+            attemptsRemaining -= 1
+
             randomIndex = getRandomInt(0, remainingPool.length)
             measure = remainingPool[randomIndex].slice()
 
@@ -131,7 +201,7 @@ function generateRandomSheet(measurePool, measureCount) {
 
             newFirstNote = getNoteNameWithoutDuration(measureFirstNoteSet.notes[0])
             newLastNote = getNoteNameWithoutDuration(measureLastNoteSet.notes[measureLastNoteSet.notes.length - 1])
-        } while (newFirstNote === lastNote)
+        } while (newFirstNote === lastNote && attemptsRemaining > 0)
 
         lastNote = newLastNote
         
