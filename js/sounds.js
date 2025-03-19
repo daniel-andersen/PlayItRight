@@ -72,7 +72,6 @@ function playCurrentSheet() {
 
         generateVisuals()
 
-        showBoxedText(getDisplayNoteName(note.noteName), "green")
         showNoteName(note)
             
         currentSheet.playback.noteIndex += 1

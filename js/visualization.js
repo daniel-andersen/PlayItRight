@@ -224,6 +224,7 @@ function showNoteName(note) {
 
     if (note === undefined) {
         showElement(noteElement, false)
+        showBoxedText("", "black")
         return
     }
 
@@ -237,6 +238,7 @@ function showNoteName(note) {
     noteElement.innerHTML = note !== undefined ? getDisplayNoteName(note.noteName) : ""
 
     showElement(noteElement, true)
+    showBoxedText(getDisplayNoteName(note.noteName), "green")
 }
 
 function visualizeNoteAtPosition(x, y) {
