@@ -5,6 +5,11 @@ const validRecognizedPercentage = 0.5
 const acceptedCorrectnessPercentage = 0.8
 const tendencyNoiseThreshold = 0.7
 
+const firstPositionFirstFingerNotes = ["D2", "A2", "E3", "B3"]
+const firstPositionSecondFingerNotes = ["D#2", "A#2", "F3", "C4"]
+const firstPositionThirdFingerNotes = ["E2", "B2", "F#3", "C#4"]
+const firstPositionFourthFingerNotes = ["F2", "C3", "G3", "D4"]
+
 function resetAnalysis() {
     currentSheet.recording.notes = []
     currentSheet.analysis.playedNotes = []
@@ -62,8 +67,11 @@ function analyzeGeneralTendency() {
 
     addSummaryText(analysisResult)
 
-    // First position first finger
+    // First position
     addSummaryText(analyzeSpecificNotes("First position first finger", firstPositionFirstFingerNotes, false))
+    addSummaryText(analyzeSpecificNotes("First position second finger", firstPositionSecondFingerNotes, false))
+    addSummaryText(analyzeSpecificNotes("First position third finger", firstPositionThirdFingerNotes, false))
+    addSummaryText(analyzeSpecificNotes("First position fourth finger", firstPositionFourthFingerNotes, false))
 }
 
 function analyzeSpecificNotes(text, notes, forceResultText) {
@@ -100,13 +108,10 @@ function analyzeSpecificNotes(text, notes, forceResultText) {
     let resultText = ""
     let showResultText = false
 
-    console.log(text)
     const recognizedPercentage = totalPlayedCount > 0 ? totalPlayedCount / totalCount : 0.0
     const correctnessPercentage = totalPlayedCount > 0 ? perfectCount / totalPlayedCount : 0.0
     const tooLowPercentage = totalPlayedCount > 0 ? tooLowCount / totalPlayedCount : 0.0
     const tooHighPercentage = totalPlayedCount > 0 ? tooHighCount / totalPlayedCount : 0.0
-
-    console.log("Recognized:", recognizedPercentage, "Correctness:", correctnessPercentage, "tooLow:", tooLowPercentage, "tooHigh:", tooHighPercentage)
 
     if (recognizedPercentage >= validRecognizedPercentage) {
         if (correctnessPercentage >= acceptedCorrectnessPercentage) {

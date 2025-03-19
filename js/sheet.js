@@ -1,5 +1,3 @@
-const firstPositionFirstFingerNotes = ["D2", "A2", "E3", "B3"]
-
 var currentSheet = {}
 
 function resetCurrentSheet() {
