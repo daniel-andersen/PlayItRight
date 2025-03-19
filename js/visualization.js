@@ -155,6 +155,7 @@ function generateVisuals() {
 
     showBoxedText("", "black")
     showNoteName(undefined)
+    showSummaryText()
 
     updateVisualState()
 }
@@ -169,11 +170,8 @@ function drawAnalysis() {
         const noteGraphics = currentSheet.notes[i].noteGraphics
 
         if (!played) {
-            console.log(noteName + " - Not played")
             continue
         }
-
-        console.log(noteName + " - " + (inTune ? "In tune" : (tooLow ? "TOO LOW" : "TOO HIGH")) + ": " + noteName + ", deviation: " + pitchDelta)
 
         if (inTune) {
             continue
@@ -260,4 +258,10 @@ function visualizeNoteAtPosition(x, y) {
     }
 
     showNoteName(undefined)
+}
+
+function showSummaryText() {
+    const summaryTextElement = document.getElementById("summaryText")
+
+    summaryTextElement.innerHTML = currentSheet.analysis.summaryText ?? ""
 }

@@ -74,7 +74,7 @@ async function startRecording(options = {}) {
 
         if (currentSheet.recording.notes === undefined || lastPlayedNote == undefined || lastPlayedNote.noteName !== noteName)
         {
-            console.log(pitch, noteName, Math.round(volume * 100))
+            console.log(pitch, noteName)
             currentSheet.recording.notes.push({
                 noteName: noteName,
                 pitches: [],

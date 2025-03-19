@@ -1,3 +1,5 @@
+const firstPositionFirstFingerNotes = ["D2", "A2", "E3", "B3"]
+
 var currentSheet = {}
 
 function resetCurrentSheet() {
@@ -15,6 +17,7 @@ function resetCurrentSheet() {
             playedNotes: [],
             playedNotesMatch: [],
             matchedNotesTuples: [],
+            summaryText: undefined,
             recognizedPercentage: undefined,
             correctnessPercentage: undefined,
             tooLowPercentage: undefined,

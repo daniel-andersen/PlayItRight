@@ -10,6 +10,7 @@ function resetAnalysis() {
     currentSheet.analysis.playedNotes = []
     currentSheet.analysis.playedNotesMatch = []
     currentSheet.analysis.matchedNotesTuples = []
+    currentSheet.analysis.summaryText = undefined
     currentSheet.analysis.recognizedPercentage = undefined
     currentSheet.analysis.correctnessPercentage = undefined
     currentSheet.analysis.tooLowPercentage = undefined
@@ -35,7 +36,7 @@ function analyzeGeneralTendency() {
     for (let matchedNoteTuple of currentSheet.analysis.matchedNotesTuples) {
         totalCount += 1
 
-        let [nodeName, played, pitchDelta, inTune, tooLow] = getNoteAnalysisResult(matchedNoteTuple)
+        const [noteName, played, pitchDelta, inTune, tooLow] = getNoteAnalysisResult(matchedNoteTuple)
         if (!played) {
             continue
         }
@@ -51,12 +52,96 @@ function analyzeGeneralTendency() {
         tooHighCount += tooLow ? 0 : 1
     }
 
-    currentSheet.analysis.recognizedPercentage = totalPlayedCount > 0 ? totalPlayedCount / totalCount : 0.0
-    currentSheet.analysis.correctnessPercentage = totalPlayedCount > 0 ? perfectCount / totalPlayedCount : 0.0
-    currentSheet.analysis.tooLowPercentage = totalPlayedCount > 0 ? tooLowCount / totalPlayedCount : 0.0
-    currentSheet.analysis.tooHighPercentage = totalPlayedCount > 0 ? tooHighCount / totalPlayedCount : 0.0
+    currentSheet.analysis.summaryText = ""
 
-    console.log(perfectCount, tooLowCount, tooHighCount, totalPlayedCount)
+    const analysisResult = analyzeSpecificNotes("General analysis", undefined, true)
+    currentSheet.analysis.recognizedPercentage = analysisResult.recognizedPercentage
+    currentSheet.analysis.correctnessPercentage = analysisResult.correctnessPercentage
+    currentSheet.analysis.tooLowPercentage = analysisResult.tooLowPercentage
+    currentSheet.analysis.tooHighPercentage = analysisResult.tooHighPercentage
+
+    addSummaryText(analysisResult)
+
+    // First position first finger
+    addSummaryText(analyzeSpecificNotes("First position first finger", firstPositionFirstFingerNotes, false))
+}
+
+function analyzeSpecificNotes(text, notes, forceResultText) {
+    let tooLowCount = 0
+    let tooHighCount = 0
+    let perfectCount = 0
+    let totalCount = 0
+    let totalPlayedCount = 0
+
+    for (let matchedNoteTuple of currentSheet.analysis.matchedNotesTuples) {
+        const [noteName, played, pitchDelta, inTune, tooLow] = getNoteAnalysisResult(matchedNoteTuple)
+
+        if (notes !== undefined && !notes.includes(noteName)) {
+            continue
+        }
+
+        totalCount += 1
+
+        if (!played) {
+            continue
+        }
+
+        totalPlayedCount += 1
+
+        if (pitchDelta <= perfectTolerance) {
+            perfectCount += 1
+            continue
+        }
+
+        tooLowCount += tooLow ? 1 : 0
+        tooHighCount += tooLow ? 0 : 1
+    }
+
+    let resultText = ""
+    let showResultText = false
+
+    console.log(text)
+    const recognizedPercentage = totalPlayedCount > 0 ? totalPlayedCount / totalCount : 0.0
+    const correctnessPercentage = totalPlayedCount > 0 ? perfectCount / totalPlayedCount : 0.0
+    const tooLowPercentage = totalPlayedCount > 0 ? tooLowCount / totalPlayedCount : 0.0
+    const tooHighPercentage = totalPlayedCount > 0 ? tooHighCount / totalPlayedCount : 0.0
+
+    console.log("Recognized:", recognizedPercentage, "Correctness:", correctnessPercentage, "tooLow:", tooLowPercentage, "tooHigh:", tooHighPercentage)
+
+    if (recognizedPercentage >= validRecognizedPercentage) {
+        if (correctnessPercentage >= acceptedCorrectnessPercentage) {
+            resultText = "Good"
+        }
+        else if (Math.min(tooLowPercentage, tooHighPercentage) / Math.max(tooLowPercentage, tooHighPercentage) >= tendencyNoiseThreshold) {
+            resultText = "Both too low and too high"
+            showResultText = true
+        }
+        else if (tooLowPercentage > tooHighPercentage) {
+            resultText = "Too low"
+            showResultText = true
+        }
+        else {
+            resultText = "Too high"
+            showResultText = true
+        }
+    }
+    else {
+        resultText = "Too few tones played"
+    }
+
+    return {
+        summaryText: showResultText || forceResultText ? "<strong>" + text + ": </strong>" + resultText + "." : undefined,
+        recognizedPercentage: totalPlayedCount > 0 ? totalPlayedCount / totalCount : 0.0,
+        correctnessPercentage: totalPlayedCount > 0 ? perfectCount / totalPlayedCount : 0.0,
+        tooLowPercentage: totalPlayedCount > 0 ? tooLowCount / totalPlayedCount : 0.0,
+        tooHighPercentage: totalPlayedCount > 0 ? tooHighCount / totalPlayedCount : 0.0
+    }
+}
+
+function addSummaryText(result) {
+    if (result.summaryText !== undefined) {
+        currentSheet.analysis.summaryText += " " + result.summaryText
+    }
 }
 
 function startRealtimeAnalysis() {
@@ -231,8 +316,6 @@ function matchSheet() {
     for (let note of playedNotesMatch) {
         s2 += (note.noteName !== undefined ? note.noteName : "--") + "   "
     }
-    console.log(s1)
-    console.log(s2)
 
     for (let i = 0; i < originalNotesMatch.length; i += 1) {
         const originalNote = originalNotesMatch[i]
