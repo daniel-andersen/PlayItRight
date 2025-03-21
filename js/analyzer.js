@@ -68,10 +68,10 @@ function analyzeGeneralTendency() {
     addSummaryText(analysisResult)
 
     // First position
-    addSummaryText(analyzeSpecificNotes("First position first finger", firstPositionFirstFingerNotes, false))
-    addSummaryText(analyzeSpecificNotes("First position second finger", firstPositionSecondFingerNotes, false))
-    addSummaryText(analyzeSpecificNotes("First position third finger", firstPositionThirdFingerNotes, false))
-    addSummaryText(analyzeSpecificNotes("First position fourth finger", firstPositionFourthFingerNotes, false))
+    addSummaryText(analyzeSpecificNotes("1st finger", firstPositionFirstFingerNotes, false))
+    addSummaryText(analyzeSpecificNotes("2nd finger", firstPositionSecondFingerNotes, false))
+    addSummaryText(analyzeSpecificNotes("3rd finger", firstPositionThirdFingerNotes, false))
+    addSummaryText(analyzeSpecificNotes("4th finger", firstPositionFourthFingerNotes, false))
 }
 
 function analyzeSpecificNotes(text, notes, forceResultText) {
